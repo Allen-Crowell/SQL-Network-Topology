@@ -1,2 +1,2 @@
 # SQL-Network-Topology
-SQL database representing a network topology
+SQL database representing a network topology. This database was created during the capstone project of a database programming course at Cape Fear Community College. We were instructed to created a custom database of our choice with some requirements on tables, data entries, primary/foreign keys, stored procedures, triggers, views, and test cases. Using my understanding of network fundamentals, I created this database to function as documentation for an existing network with the intention to integrate with a python script for automated device setup.
