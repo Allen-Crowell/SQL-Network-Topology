@@ -6,6 +6,7 @@ Network devices also operate at different layers with a natural cascade into fin
 The insert statements themselves are not intended to represent a full network topology, it is an extreme barebones example strictly created to provide a proof of concept.
 **/
 
+
 IF DB_ID('CampusNetwork') IS NOT NULL
 	DROP DATABASE CampusNetwork
 GO
@@ -24,19 +25,20 @@ CREATE TABLE Networks (
 		SubnetMask				CHAR(15) NOT NULL,-- subnet mask
 		Broadcast				CHAR(15) NOT NULL,-- broadcast address
 		UsableHosts				TINYINT NULL,-- # of usable hosts
+		OSPFarea				TINYINT NULL,
 )
 
 INSERT INTO Networks VALUES
-		('192.168.0.1','192.168.0.0','255.255.255.0','192.168.0.254','254'),
-		('192.168.1.1','192.168.1.0','255.255.255.0','192.168.1.254','254'),
-		('192.168.2.1','192.168.2.0','255.255.255.0','192.168.2.254','254'),
-		('192.168.3.1','192.168.3.0','255.255.255.0','192.168.3.254','254'),
-		('192.168.4.1','192.168.4.0','255.255.255.0','192.168.4.254','254'),
-		('192.168.5.1','192.168.5.0','255.255.255.0','192.168.5.254','254'),
-		('192.168.6.1','192.168.6.0','255.255.255.0','192.168.6.254','254'),
-		('192.168.7.1','192.168.7.0','255.255.255.0','192.168.7.254','254'),
-		('192.168.8.1','192.168.8.0','255.255.255.0','192.168.8.254','254'),
-		('192.168.9.1','192.168.9.0','255.255.255.0','192.168.9.254','254');
+		('192.168.0.1','192.168.0.0','255.255.255.0','192.168.0.254','254', '0'),
+		('192.168.1.1','192.168.1.0','255.255.255.0','192.168.1.254','254', '0'),
+		('192.168.2.1','192.168.2.0','255.255.255.0','192.168.2.254','254', '0'),
+		('192.168.3.1','192.168.3.0','255.255.255.0','192.168.3.254','254', '0'),
+		('192.168.4.1','192.168.4.0','255.255.255.0','192.168.4.254','254', '0'),
+		('192.168.5.1','192.168.5.0','255.255.255.0','192.168.5.254','254', '0'),
+		('192.168.6.1','192.168.6.0','255.255.255.0','192.168.6.254','254', '0'),
+		('192.168.7.1','192.168.7.0','255.255.255.0','192.168.7.254','254', '0'),
+		('192.168.8.1','192.168.8.0','255.255.255.0','192.168.8.254','254', '0'),
+		('192.168.9.1','192.168.9.0','255.255.255.0','192.168.9.254','254', '0');
 
 -- The RouterPorts table will contain all information about each individual router port on the network.
 -- Identified by the MAC address as PK, it will connect to the FK MAC address of each port attached to a given router in NetworkRouterConfigs
@@ -153,16 +155,16 @@ CREATE TABLE SwitchPorts (
 )
 
 INSERT INTO SwitchPorts VALUES
-		('aaaabbbb0001', 1, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0002', 2, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0003', 3, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0004', 4, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0005', 5, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0006', 6, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0007', 7, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0008', 8, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb0009', 9, 1, 'ExtraSwitchy', '01'),
-		('aaaabbbb000a', 10, 1, 'ExtraSwitchy', '01');
+		('aaaabbbb0001', 1, 1, 'Access', '01'),
+		('aaaabbbb0002', 2, 1, 'Access', '01'),
+		('aaaabbbb0003', 3, 1, 'Access', '01'),
+		('aaaabbbb0004', 4, 1, 'Access', '01'),
+		('aaaabbbb0005', 5, 1, 'Access', '01'),
+		('aaaabbbb0006', 6, 1, 'Access', '01'),
+		('aaaabbbb0007', 7, 1, 'Access', '01'),
+		('aaaabbbb0008', 8, 1, 'Access', '01'),
+		('aaaabbbb0009', 9, 1, 'Access', '01'),
+		('aaaabbbb000a', 10, 1, 'Access', '01');
 
 --The NetworkSwitchConfigs table uses the fully qualified domain name as the PK, all ports in the switch are listed to be referenced by the switchports table.
 CREATE TABLE NetworkSwitchConfigs (
@@ -227,3 +229,45 @@ VALUES
 		('Switch8.CCNA.com', 'Switch8', 'aaaabbbb0008', '192.168.7.1', 'User01', 'User02', 'User03', 'User04', 'User05', 'User06', 'User07', 'User08', 'User09', 'User10', 'ConPass', 'EnablePass'),
 		('Switch9.CCNA.com', 'Switch9', 'aaaabbbb0009', '192.168.8.1', 'User01', 'User02', 'User03', 'User04', 'User05', 'User06', 'User07', 'User08', 'User09', 'User10', 'ConPass', 'EnablePass'),
 		('Switch10.CCNA.com', 'Switch10', 'aaaabbbb000a', '192.168.9.1', 'User01', 'User02', 'User03', 'User04', 'User05', 'User06', 'User07', 'User08', 'User09', 'User10', 'ConPass', 'EnablePass');
+
+CREATE TABLE Employees (
+	employeeID		CHAR(5) PRIMARY KEY NOT NULL,
+	Username		CHAR(30) NOT NULL,
+	FirstName		CHAR(30) NOT NULL,
+	LastName		CHAR(30) NOT NULL,
+	Email			CHAR(75) NOT NULL,
+	Phone			CHAR(12) NOT NULL,
+	Address1		CHAR(75) NOT NULL,
+	Address2		CHAR(50) NULL,
+	JobTitle		CHAR(40) NOT NULL,
+	Salary			CHAR(10) NOT NULL,
+	CONSTRAINT FK_Employees_Username FOREIGN KEY (Username) REFERENCES LoginCredentials(Username)
+)
+
+INSERT INTO Employees (employeeID, Username, FirstName, LastName, Email, Phone, Address1, JobTitle, Salary)
+VALUES
+	('00001', 'User01', 'Steve', 'Rogers', 'thefirstavenger@shield.com', '678-136-7092', '569 Leaman Place, Brooklynn Heights, NY', 'Avenger', '$100,000'),
+	('00002', 'User02', 'Anthony', 'Stark', 'GeniusBillionairePlayboyPhilanthropist@StarkIndustries.com', '212-970-4133', '10880 Malibu Point, Malibu, CA 90265', 'Consultant', '$100,001');
+
+
+CREATE TABLE EndDevices (
+	NIC_MAC				CHAR(12) PRIMARY KEY NOT NULL,
+	DefaultGateway		CHAR(15) NOT NULL,	-- default gateway FK - PK from from Networks
+	IPv4				CHAR(15) NOT NULL,
+	OS					CHAR(75) NOT NULL, -- operating system
+	Manufacturer		CHAR(30) NOT NULL,
+	CONSTRAINT FK_EndDevices_DefaultGateway FOREIGN KEY (DefaultGateway) REFERENCES Networks(DefaultGateway)
+)
+
+INSERT INTO EndDevices VALUES
+	('ccccdddd0001', '192.168.0.1', '192.168.0.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd00a1', '192.168.0.1', '192.168.0.102', 'Windows 10', 'MAINGEAR'),--just adding 1 end device per subnet
+	('ccccdddd0002', '192.168.1.1', '192.168.1.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0003', '192.168.2.1', '192.168.2.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0004', '192.168.3.1', '192.168.3.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0005', '192.168.4.1', '192.168.4.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0006', '192.168.5.1', '192.168.5.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0007', '192.168.6.1', '192.168.6.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0008', '192.168.7.1', '192.168.7.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd0009', '192.168.8.1', '192.168.8.101', 'Windows 10', 'MAINGEAR'),
+	('ccccdddd000a', '192.168.9.1', '192.168.9.101', 'Windows 10', 'MAINGEAR');
